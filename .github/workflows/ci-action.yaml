@@ -65,10 +65,16 @@ jobs:
           kubectl apply -f manifests/foo-deployment.yaml
           kubectl apply -f manifests/bar-deployment.yaml
 
+          kubectl wait --for=condition=ready pod -l app=foo --timeout=60s
+          kubectl wait --for=condition=ready pod -l app=bar --timeout=60s
+
           kubectl get pods -n my-apps
       
       - name: Verify apps and ingress
         run: |
+
+          kubectl describe ingress -n my-apps
+
           echo "===== load test ====="
           echo "===== test http://localhost:foo ====="
           curl http://localhost/foo || echo "foo test failed"
