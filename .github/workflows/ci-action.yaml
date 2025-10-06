@@ -42,6 +42,7 @@ jobs:
           chmod +x kubectl
           sudo mv kubectl /usr/local/bin/
           kubectl version
+          kubectl get nodes
 
       - name: Deploy Ingress Controller 
         run: |
@@ -50,7 +51,7 @@ jobs:
                       --for=condition=ready pod \
                       --selector=app.kubernetes.io/component=controller \
                       --timeout=240s
-
+          kubectl get pods -n ingress-nginx -o wide
       - name: Create namespace
         run: |
           kubectl apply -f manifests/namespace.yaml
