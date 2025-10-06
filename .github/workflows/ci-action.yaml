@@ -39,6 +39,10 @@ jobs:
       - name: Deploy Ingress Controller 
         run: |
           kubectl apply -f manifests/ingress-nginx.yaml 
+          kubectl wait --namespace ingress-nginx \
+                      --for=condition=ready pod \
+                      --selector=app.kubernetes.io/component=controller \
+                      --timeout=240s
 
       - name: Create namespace
         run: |
