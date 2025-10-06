@@ -33,7 +33,7 @@ jobs:
       - name: Create cluster with K3D 
         run: |
           
-          k3d cluster create --config k3d-config.yaml --wait 
+          k3d cluster create --config manifests/k3d-config.yaml --wait 
           kubectl get nodes
 
       - name: Deploy Ingress Controller 
