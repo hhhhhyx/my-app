@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: foo-app
+  namespace: my-apps
+  labels:
+    app: foo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: foo
+  template:
+    metadata:
+      labels:
+        app: foo
+    spec:
+      nodeSelector:
+        app-group: foo
+      containers:
+      - command:
+        - /agnhost
+        - serve-hostname
+        - --http=true
+        - --port=8080
+        image: registry.k8s.io/e2e-test-images/agnhost:2.39
+        name: foo-app
+        ports:
+        - containerPort: 8080
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: foo-service
+  namespace: my-apps
+spec:
+  selector:
+    app: foo
+  ports:
+  # Default port used by the image
+  - port: 80
+    targetPort: 8080
