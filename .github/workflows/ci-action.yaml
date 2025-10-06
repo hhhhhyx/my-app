@@ -18,11 +18,11 @@ jobs:
 
       - name: Create cluster with KinD 
         run: |
-          curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.22.0/kind-linux-amd64
+          curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.30.0/kind-linux-amd64
           chmod +x ./kind
           sudo mv ./kind /usr/local/bin/kind
 
-          kind create cluster --config manifests/kind-config.yaml --wait 1m
+          kind create cluster --config manifests/kind-config.yaml  --image kindest/node:vv1.34.0 --wait 2m
 
           kind get clusters 
           kubectl get nodes
@@ -34,10 +34,15 @@ jobs:
                       --for=condition=ready pod \
                       --selector=app.kubernetes.io/component=controller \
                       --timeout=120s
+
+      - name: Create namespace
+        run: |
+          kubectl apply -f manifests/namespace.yaml
       
       - name: Deploy Ingress 
         run: |
           kubectl apply -f manifests/ingress.yaml 
+          kubectl describe ingress -n my-apps
       
       - name: Deploy pods
         run: |
