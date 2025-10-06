@@ -94,7 +94,7 @@ jobs:
         run: |
 
           kubectl describe ingress -n my-apps
-
+          kubectl port-forward -n ingress-nginx svc/ingress-nginx-controller 8080:80 &
           echo "===== load test ====="
           echo "===== test http://localhost:foo ====="
           curl http://localhost/foo || echo "foo test failed"
