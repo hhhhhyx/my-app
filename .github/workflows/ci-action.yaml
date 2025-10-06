@@ -65,8 +65,7 @@ jobs:
           kubectl apply -f manifests/foo-deployment.yaml
           kubectl apply -f manifests/bar-deployment.yaml
 
-          kubectl wait --for=condition=ready pod -l app=foo --timeout=60s
-          kubectl wait --for=condition=ready pod -l app=bar --timeout=60s
+          kubectl wait --for=condition=ready pod -n my-apps --all --timeout=60s
 
           kubectl get pods -n my-apps
       
