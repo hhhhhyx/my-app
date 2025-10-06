@@ -15,6 +15,47 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+
+      - name: Create cluster with KinD 
+        run: |
+          curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.30.0/kind-linux-amd64
+          chmod +x ./kind
+          sudo mv ./kind /usr/local/bin/kind
+
+          kind create cluster --config manifests/kind-config.yaml --wait 1m
+
+          kind get clusters 
+          kubectl get nodes
+
+      - name: Deploy Ingress Controller 
+        run: |
+          kubectl apply -f manifests/ingress-nginx.yaml 
+          kubectl wait --namespace ingress-nginx \
+                      --for=condition=ready pod \
+                      --selector=app.kubernetes.io/component=controller \
+                      --timeout=120s
+      
+      - name: Deploy Ingress 
+        run: |
+          kubectl apply -f manifests/ingress.yaml 
+      
+      - name: Deploy pods
+        run: |
+          kubectl apply -f manifests/foo-deployment.yaml
+          kubectl apply -f manifests/foo-deployment.yaml
+
+          kubectl get pods -n my-apps
+      
+      - name: Verify apps and ingress
+        run: |
+          echo "===== load test ====="
+          echo "===== test http://localhost:foo ====="
+          curl http://localhost/foo || echo "foo test failed"
+
+          echo "===== test http://localhost:bar ====="
+          curl http://localhost/bar || echo "bar test failed"
+      
+
       - name: Set up Python Env
         uses: actions/setup-python@v4
         with:
