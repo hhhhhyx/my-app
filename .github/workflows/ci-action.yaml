@@ -22,7 +22,7 @@ jobs:
           chmod +x ./kind
           sudo mv ./kind /usr/local/bin/kind
 
-          kind create cluster --config manifests/kind-config.yaml  --image kindest/node:vv1.34.0 --wait 2m
+          kind create cluster --config manifests/kind-config.yaml  --image kindest/node:v1.34.0 --wait 2m
 
           kind get clusters 
           kubectl get nodes
