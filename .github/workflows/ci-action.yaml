@@ -25,15 +25,15 @@ jobs:
           docker --version
 
 
-      - name: Create cluster with KinD 
+      - name: Install K3D
         run: |
-          curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.30.0/kind-linux-amd64
-          chmod +x ./kind
-          sudo mv ./kind /usr/local/bin/kind
+          curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
+          k3d version
 
-          kind create cluster --config manifests/kind-config.yaml  --image kindest/node:v1.34.0 --wait 2m
-
-          kind get clusters 
+      - name: Create cluster with K3D 
+        run: |
+          
+          k3d cluster create --config k3d-config.yaml --wait -1m
           kubectl get nodes
 
       - name: Deploy Ingress Controller 
