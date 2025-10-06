@@ -1,0 +1,25 @@
+kind: Simple
+apiVersion: k3d.io/v1alpha5
+metadata:
+  name: mycluster
+ports:
+  - port: 80:80
+    nodeFilters:
+      - loadbalancer
+  - port: 443:443
+    nodeFilters:
+      - loadbalancer
+options:
+  k3s:
+    extraArgs:
+      - arg: --kubelet-arg=node-labels=ingress-ready=true
+        nodeFilters:
+          - server:*
+      - arg: --kubelet-arg=node-labels=app-group=foo
+        nodeFilters:
+          - agent:0
+      - arg: --kubelet-arg=node-labels=app-group=bar
+        nodeFilters:
+          - agent:1
+servers: 1
+agents: 2
