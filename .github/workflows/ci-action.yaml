@@ -34,7 +34,14 @@ jobs:
         run: |
           
           k3d cluster create --config manifests/k3d-config.yaml --wait 
-          kubectl get nodes
+
+      - name: Install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+
+          chmod +x kubectl
+          sudo mv kubectl /usr/local/bin/
+          kubectl version
 
       - name: Deploy Ingress Controller 
         run: |
