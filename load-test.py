@@ -33,7 +33,7 @@ def single_request_test():
         }
 
 def multi_request_test():
-    total_requests = 10
+    total_requests = random.randint(100, 200)
     results = []
 
     for i in range(total_requests):

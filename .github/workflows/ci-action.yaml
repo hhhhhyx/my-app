@@ -87,7 +87,6 @@ jobs:
           kubectl apply -f manifests/bar-deployment.yaml
 
           kubectl wait --for=condition=ready pod -n my-apps --all --timeout=60s
-
           kubectl get pods -n my-apps
       
       - name: Verify apps and ingress
@@ -98,7 +97,7 @@ jobs:
           echo "===== load test ====="
           echo "===== test http://localhost:foo ====="
           curl http://localhost/foo || echo "foo test failed"
-
+          echo ""
           echo "===== test http://localhost:bar ====="
           curl http://localhost/bar || echo "bar test failed"
       
@@ -135,7 +134,7 @@ jobs:
             Error Rate: ${report.failed_rate}%
             Throughput: ${report.throughput} req/s
 
-            ESPONSE TIMES (ms):
+            RESPONSE TIMES (ms):
             Average: ${report.response_times.avg}
             P90: ${report.response_times.p90}
             P95: ${report.response_times.p95}
